@@ -110,4 +110,23 @@ public class TaskController {
         taskService.saveTask(existingTask);
         return "redirect:/dashboard";
     }
+
+    // POST /tasks/delete/{id} → delete the task
+    @PostMapping("/delete/{id}")
+    public String deleteTask(@PathVariable Long id,
+                             @AuthenticationPrincipal UserDetails userDetails,
+                             org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+
+        Task task = taskService.getTaskById(id);
+
+        if (!task.getUser().getUsername().equals(userDetails.getUsername())) {
+            return "redirect:/dashboard";
+        }
+
+        taskService.deleteTask(id);
+
+        // addFlashAttribute survives ONE redirect then disappears automatically
+        redirectAttributes.addFlashAttribute("successMessage", "Task deleted successfully!");
+        return "redirect:/dashboard";
+    }
 }

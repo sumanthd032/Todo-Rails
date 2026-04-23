@@ -22,6 +22,13 @@
     <span>Completed: <strong th:text="${completedTasks}">0</strong></span>
 </div>
 
+<!-- Flash message -->
+<div id="successMessage"
+     th:if="${successMessage}"
+     style="color:green; padding:10px; border:1px solid green; margin:10px 0;">
+    <span th:text="${successMessage}"></span>
+</div>
+
 <!-- Add task button -->
 <div>
     <a th:href="@{/tasks/new}">+ Add New Task</a>
@@ -29,12 +36,10 @@
 
 <!-- Tasks table -->
 <div>
-    <!-- shown when no tasks exist -->
     <p th:if="${tasks.isEmpty()}">
         No tasks yet. Add your first task!
     </p>
 
-    <!-- shown when tasks exist -->
     <table th:if="${!tasks.isEmpty()}">
         <thead>
         <tr>
@@ -47,10 +52,6 @@
         </tr>
         </thead>
         <tbody>
-        <!--
-          th:each = loops over the tasks list
-          like: for (Task task : tasks)
-        -->
         <tr th:each="task : ${tasks}">
             <td th:text="${task.title}">Task title</td>
             <td th:text="${task.priority}">Priority</td>
@@ -63,8 +64,13 @@
                 <form th:action="@{/tasks/delete/{id}(id=${task.id})}"
                       method="post"
                       style="display:inline">
+                    <!--
+                      th:attr sets a custom HTML attribute
+                      here we pass the task title to our JS function
+                      so the confirm message says the actual task name
+                    -->
                     <button type="submit"
-                            onclick="return confirm('Delete this task?')">
+                            th:attr="onclick='return confirmDelete(\'' + ${task.title} + '\')'">
                         Delete
                     </button>
                 </form>
@@ -73,6 +79,9 @@
         </tbody>
     </table>
 </div>
+
+<!-- Load dashboard JS at bottom of body -->
+<script th:src="@{/js/dashboard.js}"></script>
 
 </body>
 </html>
