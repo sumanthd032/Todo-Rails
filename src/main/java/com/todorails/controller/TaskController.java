@@ -30,6 +30,8 @@ public class TaskController {
         return "task-form";
     }
 
+
+
     // POST /tasks/new → save the task
     @PostMapping("/new")
     public String saveTask(@Valid @ModelAttribute("task") Task task,
@@ -49,6 +51,63 @@ public class TaskController {
         task.setUser(user);
 
         taskService.saveTask(task);
+        return "redirect:/dashboard";
+    }
+
+    // GET /tasks/edit/{id} → show form pre-filled with task data
+    @GetMapping("/edit/{id}")
+    public String showEditTaskForm(@PathVariable Long id,
+                                   @AuthenticationPrincipal UserDetails userDetails,
+                                   Model model) {
+
+        Task task = taskService.getTaskById(id);
+
+        // SECURITY CHECK: make sure this task belongs to the logged-in user
+        // If user A tries to edit user B's task via URL manipulation, block them
+        if (!task.getUser().getUsername().equals(userDetails.getUsername())) {
+            return "redirect:/dashboard";
+        }
+
+        model.addAttribute("task", task);           // pre-filled task
+        model.addAttribute("priorities", Task.Priority.values());
+        model.addAttribute("taskTypes", Task.TaskType.values());
+        model.addAttribute("editMode", true);        // tell HTML we are editing
+        return "task-form";
+    }
+
+    // POST /tasks/edit/{id} → save the updated task
+    @PostMapping("/edit/{id}")
+    public String updateTask(@PathVariable Long id,
+                             @Valid @ModelAttribute("task") Task updatedTask,
+                             BindingResult result,
+                             @AuthenticationPrincipal UserDetails userDetails,
+                             Model model) {
+
+        if (result.hasErrors()) {
+            model.addAttribute("priorities", Task.Priority.values());
+            model.addAttribute("taskTypes", Task.TaskType.values());
+            model.addAttribute("editMode", true);
+            return "task-form";
+        }
+
+        // fetch the ORIGINAL task from DB
+        Task existingTask = taskService.getTaskById(id);
+
+        // security check again
+        if (!existingTask.getUser().getUsername().equals(userDetails.getUsername())) {
+            return "redirect:/dashboard";
+        }
+
+        // update only the fields the user can change
+        // we do NOT change id or user — those stay the same
+        existingTask.setTitle(updatedTask.getTitle());
+        existingTask.setDescription(updatedTask.getDescription());
+        existingTask.setPriority(updatedTask.getPriority());
+        existingTask.setTaskType(updatedTask.getTaskType());
+        existingTask.setDueDate(updatedTask.getDueDate());
+        existingTask.setCompleted(updatedTask.isCompleted());
+
+        taskService.saveTask(existingTask);
         return "redirect:/dashboard";
     }
 }

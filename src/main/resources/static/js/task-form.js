@@ -1,19 +1,16 @@
-// This whole file runs after the page loads
-
-// document.getElementById("taskForm") finds the form element in HTML by its id
 const form = document.getElementById("taskForm");
 
-// .addEventListener("submit", function) means:
-// "when this form is submitted, run this function first"
+// Check if we are in edit mode
+// document.title is the <title> tag content
+// We set it to "Edit Task" in edit mode in our HTML
+const isEditMode = document.title.includes("Edit Task");
+
 form.addEventListener("submit", function(event) {
 
-    // assume no errors at start
     let isValid = true;
 
     // --- Validate Title ---
     const title = document.getElementById("title").value.trim();
-    // .value gets what the user typed
-    // .trim() removes spaces from start and end
     const titleError = document.getElementById("titleError");
 
     if (title === "") {
@@ -23,29 +20,29 @@ form.addEventListener("submit", function(event) {
         titleError.textContent = "Title must be at least 3 characters";
         isValid = false;
     } else {
-        titleError.textContent = ""; // clear error if valid
+        titleError.textContent = "";
     }
 
-    // --- Validate Due Date ---
-    const dueDate = document.getElementById("dueDate").value;
-    const dueDateError = document.getElementById("dueDateError");
+    // --- Validate Due Date (only for new tasks) ---
+    // In edit mode, we allow keeping an existing past due date
+    if (!isEditMode) {
+        const dueDate = document.getElementById("dueDate").value;
+        const dueDateError = document.getElementById("dueDateError");
 
-    if (dueDate !== "") {
-        // Date() creates a date object from a string
-        const selectedDate = new Date(dueDate);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0); // reset time to midnight for fair comparison
+        if (dueDate !== "") {
+            const selectedDate = new Date(dueDate);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
 
-        if (selectedDate < today) {
-            dueDateError.textContent = "Due date cannot be in the past";
-            isValid = false;
-        } else {
-            dueDateError.textContent = "";
+            if (selectedDate < today) {
+                dueDateError.textContent = "Due date cannot be in the past";
+                isValid = false;
+            } else {
+                dueDateError.textContent = "";
+            }
         }
     }
 
-    // if any validation failed, stop the form from submitting
-    // event.preventDefault() cancels the form submission
     if (!isValid) {
         event.preventDefault();
     }

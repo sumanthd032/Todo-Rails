@@ -2,14 +2,20 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Add Task - TODO Rails</title>
+    <title th:text="${editMode} ? 'Edit Task' : 'Add Task'">Task - TODO Rails</title>
 </head>
 <body>
 
-<h1>Add New Task</h1>
+<!-- Title changes based on mode -->
+<h1 th:text="${editMode} ? 'Edit Task' : 'Add New Task'">Task Form</h1>
 
+<!--
+  th:action changes based on mode:
+  - add mode:  action = /tasks/new
+  - edit mode: action = /tasks/edit/3  (using task's id)
+-->
 <form id="taskForm"
-      th:action="@{/tasks/new}"
+      th:action="${editMode} ? @{/tasks/edit/{id}(id=${task.id})} : @{/tasks/new}"
       th:object="${task}"
       method="post">
 
@@ -24,7 +30,6 @@
               th:errors="*{title}"
               style="color:red">
         </span>
-        <!-- JS will put error here -->
         <span id="titleError" style="color:red"></span>
     </div>
 
@@ -38,15 +43,10 @@
         </textarea>
     </div>
 
-    <!-- Priority dropdown -->
+    <!-- Priority -->
     <div>
         <label>Priority *</label>
         <select th:field="*{priority}" id="priority">
-            <!--
-              th:each loops over priorities list we passed from controller
-              th:value sets the option value
-              th:text sets the display text
-            -->
             <option th:each="p : ${priorities}"
                     th:value="${p}"
                     th:text="${p}">
@@ -54,7 +54,7 @@
         </select>
     </div>
 
-    <!-- Task Type dropdown -->
+    <!-- Task Type -->
     <div>
         <label>Type *</label>
         <select th:field="*{taskType}" id="taskType">
@@ -74,15 +74,27 @@
         <span id="dueDateError" style="color:red"></span>
     </div>
 
+    <!-- Completed checkbox — only show in edit mode -->
+    <div th:if="${editMode}">
+        <label>
+            <input type="checkbox"
+                   th:field="*{completed}"/>
+            Mark as completed
+        </label>
+    </div>
+
     <!-- Buttons -->
     <div>
-        <button type="submit" id="submitBtn">Add Task</button>
+        <!-- button text changes based on mode -->
+        <button type="submit" id="submitBtn"
+                th:text="${editMode} ? 'Update Task' : 'Add Task'">
+            Submit
+        </button>
         <a th:href="@{/dashboard}">Cancel</a>
     </div>
 
 </form>
 
-<!-- Load our JS file — must be at bottom of body -->
 <script th:src="@{/js/task-form.js}"></script>
 
 </body>
