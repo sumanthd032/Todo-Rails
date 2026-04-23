@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>TODO Rails</title>
@@ -7,5 +7,7 @@
 <body>
 <h1>Welcome to TODO Rails!</h1>
 <p>Your personal task manager.</p>
+<a th:href="@{/register}">Register</a> |
+<a th:href="@{/login}">Login</a>
 </body>
 </html>

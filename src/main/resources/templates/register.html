@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Register - TODO Rails</title>
+</head>
+<body>
+
+<h1>Create Account</h1>
+
+<!--
+  th:action → where to POST the form
+  th:object → binds form fields to the User object we put in Model
+-->
+<form th:action="@{/register}" th:object="${user}" method="post">
+
+    <!-- Username field -->
+    <div>
+        <label>Username</label>
+        <input type="text" th:field="*{username}" placeholder="Enter username"/>
+        <!-- show validation error if exists -->
+        <span th:if="${#fields.hasErrors('username')}"
+              th:errors="*{username}"
+              style="color:red">
+        </span>
+        <!-- show duplicate username error -->
+        <span th:if="${usernameError}"
+              th:text="${usernameError}"
+              style="color:red">
+        </span>
+    </div>
+
+    <!-- Email field -->
+    <div>
+        <label>Email</label>
+        <input type="email" th:field="*{email}" placeholder="Enter email"/>
+        <span th:if="${#fields.hasErrors('email')}"
+              th:errors="*{email}"
+              style="color:red">
+        </span>
+        <span th:if="${emailError}"
+              th:text="${emailError}"
+              style="color:red">
+        </span>
+    </div>
+
+    <!-- Password field -->
+    <div>
+        <label>Password</label>
+        <input type="password" th:field="*{password}" placeholder="Min 6 characters"/>
+        <span th:if="${#fields.hasErrors('password')}"
+              th:errors="*{password}"
+              style="color:red">
+        </span>
+    </div>
+
+    <button type="submit">Register</button>
+
+</form>
+
+<p>Already have an account? <a th:href="@{/login}">Login here</a></p>
+
+</body>
+</html>
