@@ -6,13 +6,73 @@
 </head>
 <body>
 
-<h1>Welcome to your Dashboard!</h1>
-<p>You are logged in.</p>
+<!-- Top bar -->
+<div>
+    <h1>TODO Rails</h1>
+    <span>Welcome, <strong th:text="${user.username}">username</strong>!</span>
+    <form th:action="@{/logout}" method="post" style="display:inline">
+        <button type="submit">Logout</button>
+    </form>
+</div>
 
-<!-- logout is a POST request for security reasons -->
-<form th:action="@{/logout}" method="post">
-    <button type="submit">Logout</button>
-</form>
+<!-- Stats bar -->
+<div>
+    <span>Total: <strong th:text="${totalTasks}">0</strong></span>
+    <span>Pending: <strong th:text="${pendingTasks}">0</strong></span>
+    <span>Completed: <strong th:text="${completedTasks}">0</strong></span>
+</div>
+
+<!-- Add task button -->
+<div>
+    <a th:href="@{/tasks/new}">+ Add New Task</a>
+</div>
+
+<!-- Tasks table -->
+<div>
+    <!-- shown when no tasks exist -->
+    <p th:if="${tasks.isEmpty()}">
+        No tasks yet. Add your first task!
+    </p>
+
+    <!-- shown when tasks exist -->
+    <table th:if="${!tasks.isEmpty()}">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Priority</th>
+            <th>Type</th>
+            <th>Due Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--
+          th:each = loops over the tasks list
+          like: for (Task task : tasks)
+        -->
+        <tr th:each="task : ${tasks}">
+            <td th:text="${task.title}">Task title</td>
+            <td th:text="${task.priority}">Priority</td>
+            <td th:text="${task.taskType}">Type</td>
+            <td th:text="${task.dueDate != null ? task.dueDate : '-'}">Date</td>
+            <td th:text="${task.completed ? 'Done' : 'Pending'}">Status</td>
+            <td>
+                <a th:href="@{/tasks/edit/{id}(id=${task.id})}">Edit</a>
+                |
+                <form th:action="@{/tasks/delete/{id}(id=${task.id})}"
+                      method="post"
+                      style="display:inline">
+                    <button type="submit"
+                            onclick="return confirm('Delete this task?')">
+                        Delete
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 
 </body>
 </html>
