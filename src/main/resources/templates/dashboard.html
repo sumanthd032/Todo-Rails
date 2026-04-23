@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - TODO Rails</title>
+</head>
+<body>
+
+<h1>Welcome to your Dashboard!</h1>
+<p>You are logged in.</p>
+
+<!-- logout is a POST request for security reasons -->
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Logout</button>
+</form>
+
+</body>
+</html>
