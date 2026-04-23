@@ -1,0 +1,300 @@
+/* ============================================
+   CSS VARIABLES — define colors once, use everywhere
+   ============================================ */
+:root {
+    --primary:     #4f46e5;   /* indigo — main brand color */
+    --primary-dark:#3730a3;   /* darker indigo for hover */
+    --danger:      #ef4444;   /* red — delete actions */
+    --danger-dark: #dc2626;
+    --success:     #22c55e;   /* green — success messages */
+    --warning:     #f59e0b;   /* amber — medium priority */
+    --bg:          #f8fafc;   /* light gray page background */
+    --card:        #ffffff;   /* white card background */
+    --text:        #1e293b;   /* dark text */
+    --muted:       #64748b;   /* gray secondary text */
+    --border:      #e2e8f0;   /* light border color */
+    --radius:      8px;       /* rounded corners */
+    --shadow:      0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* ============================================
+   RESET — remove browser default styles
+   ============================================ */
+*, *::before, *::after {
+    box-sizing: border-box;  /* padding included in width calculation */
+    margin: 0;
+    padding: 0;
+}
+
+/* ============================================
+   BASE
+   ============================================ */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* ============================================
+   NAVBAR
+   ============================================ */
+.navbar {
+    background: var(--primary);
+    color: white;
+    padding: 0 2rem;
+    height: 60px;
+    display: flex;              /* flexbox: arrange children in a row */
+    align-items: center;        /* center vertically */
+    justify-content: space-between; /* push items to opposite ends */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.navbar-brand {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: white;
+    letter-spacing: -0.5px;
+}
+
+.navbar-brand:hover {
+    text-decoration: none;
+    color: #e0e7ff;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;          /* space between children */
+}
+
+.navbar-right span {
+    color: #e0e7ff;
+    font-size: 0.9rem;
+}
+
+/* ============================================
+   PAGE WRAPPER
+   ============================================ */
+.page-wrapper {
+    max-width: 900px;       /* content never wider than 900px */
+    margin: 2rem auto;      /* centered horizontally */
+    padding: 0 1rem;
+}
+
+/* ============================================
+   CARD — white box with shadow
+   ============================================ */
+.card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    padding: 2rem;
+}
+
+/* ============================================
+   AUTH PAGES (login / register)
+   ============================================ */
+.auth-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.auth-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 420px;
+}
+
+.auth-card h1 {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 0.25rem;
+    color: var(--primary);
+}
+
+.auth-card .subtitle {
+    text-align: center;
+    color: var(--muted);
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+}
+
+/* ============================================
+   FORMS
+   ============================================ */
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.4rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+    color: var(--text);
+    background: white;
+    transition: border-color 0.2s;  /* smooth color change on focus */
+}
+
+/* blue border when user clicks into input */
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;   /* user can resize only vertically */
+    min-height: 80px;
+}
+
+.error-msg {
+    color: var(--danger);
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.btn {
+    display: inline-block;
+    padding: 0.625rem 1.25rem;
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: background 0.2s, transform 0.1s;
+    text-align: center;
+}
+
+.btn:active {
+    transform: scale(0.98);  /* slight shrink on click */
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    width: 100%;
+    padding: 0.75rem;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    text-decoration: none;
+    color: white;
+}
+
+.btn-sm {
+    padding: 0.3rem 0.75rem;
+    font-size: 0.8rem;
+}
+
+.btn-edit {
+    background: #e0e7ff;
+    color: var(--primary);
+}
+
+.btn-edit:hover {
+    background: #c7d2fe;
+    text-decoration: none;
+}
+
+.btn-delete {
+    background: #fee2e2;
+    color: var(--danger);
+}
+
+.btn-delete:hover {
+    background: #fecaca;
+}
+
+.btn-logout {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: var(--radius);
+    border: 1px solid rgba(255,255,255,0.3);
+    cursor: pointer;
+    font-size: 0.875rem;
+}
+
+.btn-logout:hover {
+    background: rgba(255,255,255,0.25);
+}
+
+/* ============================================
+   ALERTS / MESSAGES
+   ============================================ */
+.alert {
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius);
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.alert-success {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+.alert-error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.alert-info {
+    background: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+}
+
+/* ============================================
+   RESPONSIVE — on small screens stack things
+   ============================================ */
+@media (max-width: 600px) {
+    .navbar {
+        padding: 0 1rem;
+    }
+    .auth-card {
+        padding: 1.5rem;
+    }
+    .card {
+        padding: 1rem;
+    }
+}

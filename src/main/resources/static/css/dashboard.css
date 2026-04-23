@@ -1,0 +1,152 @@
+/* ============================================
+   STATS BAR
+   ============================================ */
+.stats-bar {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-card {
+    flex: 1;                /* each card takes equal width */
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    text-align: center;
+    box-shadow: var(--shadow);
+}
+
+.stat-card .stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+    display: block;
+}
+
+.stat-card .stat-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ============================================
+   TOOLBAR (heading + add button row)
+   ============================================ */
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.toolbar h2 {
+    font-size: 1.2rem;
+    color: var(--text);
+}
+
+.btn-add {
+    background: var(--primary);
+    color: white;
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--radius);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.btn-add:hover {
+    background: var(--primary-dark);
+    text-decoration: none;
+    color: white;
+}
+
+/* ============================================
+   TASKS TABLE
+   ============================================ */
+.tasks-table {
+    width: 100%;
+    border-collapse: collapse;  /* remove gaps between cells */
+    font-size: 0.9rem;
+}
+
+.tasks-table th {
+    background: #f1f5f9;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+}
+
+.tasks-table td {
+    padding: 0.875rem 1rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+}
+
+.tasks-table tr:last-child td {
+    border-bottom: none;    /* no border on last row */
+}
+
+.tasks-table tr:hover td {
+    background: #f8fafc;    /* subtle highlight on row hover */
+}
+
+/* completed row looks faded */
+.tasks-table tr.completed-row td {
+    opacity: 0.55;
+    text-decoration: line-through;
+}
+
+/* ============================================
+   PRIORITY BADGES
+   ============================================ */
+.badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;   /* pill shape */
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.badge-HIGH   { background:#fee2e2; color:#991b1b; }
+.badge-MEDIUM { background:#fef9c3; color:#854d0e; }
+.badge-LOW    { background:#dcfce7; color:#166534; }
+
+/* ============================================
+   STATUS BADGE
+   ============================================ */
+.status-done    { background:#dcfce7; color:#166534; }
+.status-pending { background:#f1f5f9; color:var(--muted); }
+
+/* ============================================
+   EMPTY STATE
+   ============================================ */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--muted);
+}
+
+.empty-state p {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* ============================================
+   RESPONSIVE TABLE — scroll on small screens
+   ============================================ */
+.table-wrapper {
+    overflow-x: auto;   /* horizontal scroll if table too wide */
+}
+
+@media (max-width: 600px) {
+    .stats-bar {
+        flex-direction: column; /* stack stat cards vertically */
+    }
+}

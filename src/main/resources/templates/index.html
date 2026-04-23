@@ -3,11 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>TODO Rails</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
 </head>
 <body>
-<h1>Welcome to TODO Rails!</h1>
-<p>Your personal task manager.</p>
-<a th:href="@{/register}">Register</a> |
-<a th:href="@{/login}">Login</a>
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <h1>TODO Rails</h1>
+        <p class="subtitle">Your personal task manager</p>
+        <a th:href="@{/login}" class="btn btn-primary"
+           style="display:block; margin-bottom:1rem;">Login</a>
+        <a th:href="@{/register}" class="btn btn-primary"
+           style="display:block; background:#6366f1;">Register</a>
+    </div>
+</div>
 </body>
 </html>

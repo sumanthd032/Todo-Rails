@@ -2,100 +2,95 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${editMode} ? 'Edit Task' : 'Add Task'">Task - TODO Rails</title>
+    <title th:text="${editMode} ? 'Edit Task - TODO Rails' : 'Add Task - TODO Rails'">
+        Task - TODO Rails
+    </title>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
 </head>
 <body>
 
-<!-- Title changes based on mode -->
-<h1 th:text="${editMode} ? 'Edit Task' : 'Add New Task'">Task Form</h1>
-
-<!--
-  th:action changes based on mode:
-  - add mode:  action = /tasks/new
-  - edit mode: action = /tasks/edit/3  (using task's id)
--->
-<form id="taskForm"
-      th:action="${editMode} ? @{/tasks/edit/{id}(id=${task.id})} : @{/tasks/new}"
-      th:object="${task}"
-      method="post">
-
-    <!-- Title -->
-    <div>
-        <label>Title *</label>
-        <input type="text"
-               th:field="*{title}"
-               id="title"
-               placeholder="What needs to be done?"/>
-        <span th:if="${#fields.hasErrors('title')}"
-              th:errors="*{title}"
-              style="color:red">
-        </span>
-        <span id="titleError" style="color:red"></span>
+<nav class="navbar">
+    <a th:href="@{/dashboard}" class="navbar-brand">TODO Rails</a>
+    <div class="navbar-right">
+        <a th:href="@{/dashboard}" style="color:#e0e7ff; font-size:0.9rem;">
+            ← Back to Dashboard
+        </a>
     </div>
+</nav>
 
-    <!-- Description -->
-    <div>
-        <label>Description</label>
-        <textarea th:field="*{description}"
-                  id="description"
-                  placeholder="Optional details..."
-                  rows="3">
-        </textarea>
+<div class="page-wrapper">
+    <div class="card" style="max-width:600px; margin:0 auto;">
+        <h2 style="margin-bottom:1.5rem;"
+            th:text="${editMode} ? 'Edit Task' : 'Add New Task'">
+            Task Form
+        </h2>
+
+        <form id="taskForm"
+              th:action="${editMode} ? @{/tasks/edit/{id}(id=${task.id})} : @{/tasks/new}"
+              th:object="${task}"
+              method="post">
+
+            <div class="form-group">
+                <label>Title *</label>
+                <input type="text" th:field="*{title}"
+                       id="title" placeholder="What needs to be done?"/>
+                <span class="error-msg"
+                      th:if="${#fields.hasErrors('title')}"
+                      th:errors="*{title}"></span>
+                <span class="error-msg" id="titleError"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <textarea th:field="*{description}" id="description"
+                          placeholder="Optional details..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Priority *</label>
+                <select th:field="*{priority}" id="priority">
+                    <option th:each="p : ${priorities}"
+                            th:value="${p}" th:text="${p}"></option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Type *</label>
+                <select th:field="*{taskType}" id="taskType">
+                    <option th:each="t : ${taskTypes}"
+                            th:value="${t}" th:text="${t}"></option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Due Date</label>
+                <input type="date" th:field="*{dueDate}" id="dueDate"/>
+                <span class="error-msg" id="dueDateError"></span>
+            </div>
+
+            <div class="form-group" th:if="${editMode}">
+                <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+                    <input type="checkbox" th:field="*{completed}"/>
+                    Mark as completed
+                </label>
+            </div>
+
+            <div style="display:flex; gap:1rem; margin-top:1.5rem;">
+                <button type="submit" class="btn btn-primary"
+                        style="flex:1;"
+                        th:text="${editMode} ? 'Update Task' : 'Add Task'">
+                    Submit
+                </button>
+                <a th:href="@{/dashboard}"
+                   class="btn btn-edit"
+                   style="flex:1; text-align:center; padding:0.75rem;">
+                    Cancel
+                </a>
+            </div>
+        </form>
     </div>
-
-    <!-- Priority -->
-    <div>
-        <label>Priority *</label>
-        <select th:field="*{priority}" id="priority">
-            <option th:each="p : ${priorities}"
-                    th:value="${p}"
-                    th:text="${p}">
-            </option>
-        </select>
-    </div>
-
-    <!-- Task Type -->
-    <div>
-        <label>Type *</label>
-        <select th:field="*{taskType}" id="taskType">
-            <option th:each="t : ${taskTypes}"
-                    th:value="${t}"
-                    th:text="${t}">
-            </option>
-        </select>
-    </div>
-
-    <!-- Due Date -->
-    <div>
-        <label>Due Date</label>
-        <input type="date"
-               th:field="*{dueDate}"
-               id="dueDate"/>
-        <span id="dueDateError" style="color:red"></span>
-    </div>
-
-    <!-- Completed checkbox — only show in edit mode -->
-    <div th:if="${editMode}">
-        <label>
-            <input type="checkbox"
-                   th:field="*{completed}"/>
-            Mark as completed
-        </label>
-    </div>
-
-    <!-- Buttons -->
-    <div>
-        <!-- button text changes based on mode -->
-        <button type="submit" id="submitBtn"
-                th:text="${editMode} ? 'Update Task' : 'Add Task'">
-            Submit
-        </button>
-        <a th:href="@{/dashboard}">Cancel</a>
-    </div>
-
-</form>
+</div>
 
 <script th:src="@{/js/task-form.js}"></script>
-
 </body>
 </html>

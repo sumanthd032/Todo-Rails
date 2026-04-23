@@ -3,85 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <title>Dashboard - TODO Rails</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}"/>
 </head>
 <body>
 
-<!-- Top bar -->
-<div>
-    <h1>TODO Rails</h1>
-    <span>Welcome, <strong th:text="${user.username}">username</strong>!</span>
-    <form th:action="@{/logout}" method="post" style="display:inline">
-        <button type="submit">Logout</button>
-    </form>
+<nav class="navbar">
+    <a th:href="@{/dashboard}" class="navbar-brand">TODO Rails</a>
+    <div class="navbar-right">
+        <span>Hi, <strong th:text="${user.username}">username</strong></span>
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="btn-logout">Logout</button>
+        </form>
+    </div>
+</nav>
+
+<div class="page-wrapper">
+
+    <!-- Stats -->
+    <div class="stats-bar">
+        <div class="stat-card">
+            <span class="stat-number" th:text="${totalTasks}">0</span>
+            <span class="stat-label">Total</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number" th:text="${pendingTasks}">0</span>
+            <span class="stat-label">Pending</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-number" th:text="${completedTasks}">0</span>
+            <span class="stat-label">Completed</span>
+        </div>
+    </div>
+
+    <!-- Flash message -->
+    <div id="successMessage"
+         class="alert alert-success"
+         th:if="${successMessage}"
+         th:text="${successMessage}">
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+        <h2>My Tasks</h2>
+        <a th:href="@{/tasks/new}" class="btn-add">+ Add Task</a>
+    </div>
+
+    <!-- Card wrapping the table -->
+    <div class="card" style="padding:0;">
+
+        <!-- Empty state -->
+        <div class="empty-state" th:if="${tasks.isEmpty()}">
+            <p>No tasks yet!</p>
+            <a th:href="@{/tasks/new}" class="btn btn-primary"
+               style="width:auto; display:inline-block;">
+                Add your first task
+            </a>
+        </div>
+
+        <!-- Table -->
+        <div class="table-wrapper" th:if="${!tasks.isEmpty()}">
+            <table class="tasks-table">
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Priority</th>
+                    <th>Type</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="task : ${tasks}"
+                    th:classappend="${task.completed} ? 'completed-row' : ''">
+                    <td th:text="${task.title}">Title</td>
+                    <td>
+                            <span class="badge"
+                                  th:classappend="'badge-' + ${task.priority}"
+                                  th:text="${task.priority}">
+                            </span>
+                    </td>
+                    <td th:text="${task.taskType}">Type</td>
+                    <td th:text="${task.dueDate != null ? task.dueDate : '-'}">Date</td>
+                    <td>
+                            <span class="badge"
+                                  th:classappend="${task.completed} ? 'status-done' : 'status-pending'"
+                                  th:text="${task.completed} ? 'Done' : 'Pending'">
+                            </span>
+                    </td>
+                    <td>
+                        <a th:href="@{/tasks/edit/{id}(id=${task.id})}"
+                           class="btn btn-sm btn-edit">Edit</a>
+                        <form th:action="@{/tasks/delete/{id}(id=${task.id})}"
+                              method="post" style="display:inline">
+                            <button type="submit"
+                                    class="btn btn-sm btn-delete"
+                                    th:attr="onclick='return confirmDelete(\'' + ${task.title} + '\')'">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
-<!-- Stats bar -->
-<div>
-    <span>Total: <strong th:text="${totalTasks}">0</strong></span>
-    <span>Pending: <strong th:text="${pendingTasks}">0</strong></span>
-    <span>Completed: <strong th:text="${completedTasks}">0</strong></span>
-</div>
-
-<!-- Flash message -->
-<div id="successMessage"
-     th:if="${successMessage}"
-     style="color:green; padding:10px; border:1px solid green; margin:10px 0;">
-    <span th:text="${successMessage}"></span>
-</div>
-
-<!-- Add task button -->
-<div>
-    <a th:href="@{/tasks/new}">+ Add New Task</a>
-</div>
-
-<!-- Tasks table -->
-<div>
-    <p th:if="${tasks.isEmpty()}">
-        No tasks yet. Add your first task!
-    </p>
-
-    <table th:if="${!tasks.isEmpty()}">
-        <thead>
-        <tr>
-            <th>Title</th>
-            <th>Priority</th>
-            <th>Type</th>
-            <th>Due Date</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="task : ${tasks}">
-            <td th:text="${task.title}">Task title</td>
-            <td th:text="${task.priority}">Priority</td>
-            <td th:text="${task.taskType}">Type</td>
-            <td th:text="${task.dueDate != null ? task.dueDate : '-'}">Date</td>
-            <td th:text="${task.completed ? 'Done' : 'Pending'}">Status</td>
-            <td>
-                <a th:href="@{/tasks/edit/{id}(id=${task.id})}">Edit</a>
-                |
-                <form th:action="@{/tasks/delete/{id}(id=${task.id})}"
-                      method="post"
-                      style="display:inline">
-                    <!--
-                      th:attr sets a custom HTML attribute
-                      here we pass the task title to our JS function
-                      so the confirm message says the actual task name
-                    -->
-                    <button type="submit"
-                            th:attr="onclick='return confirmDelete(\'' + ${task.title} + '\')'">
-                        Delete
-                    </button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-
-<!-- Load dashboard JS at bottom of body -->
 <script th:src="@{/js/dashboard.js}"></script>
-
 </body>
 </html>
